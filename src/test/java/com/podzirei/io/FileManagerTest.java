@@ -41,7 +41,7 @@ public class FileManagerTest {
     }
 
     @AfterEach
-    void delete() throws Exception {
+    void delete() {
         File path8 = new File("Test\\TestInside\\TestInsideInside\\file6.txt");
         path8.delete();
         File path7 = new File("Test\\TestInside\\TestInsideInside");
