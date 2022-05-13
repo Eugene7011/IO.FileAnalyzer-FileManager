@@ -1,96 +1,44 @@
 package com.podzirei.io;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FileAnalyzerTest {
 
-   //File path1 = new File("Test\\file1.txt");
-    String searchedWord = "jeans";
-
-
-    public FileAnalyzerTest() throws IOException {
-    }
-
-    @BeforeEach
-    void init() throws Exception {
-        File path = new File("Test");
-        path.mkdir();
-
-        File path1 = new File("Test\\file1.txt");
-        path1.createNewFile();
-        OutputStream outputStream = new FileOutputStream(path1);
-        String text = "After the Second World War, jeans became popular all over the world. " +
-                "Today, blue jeans are made throughout the world – most of them in Asia. " +
-                "Very few jeans are now made in the USA, because of the cost: but it is still possible to buy blue jeans that are made in San Francisco. " +
-                "if you have a lot of money to spend.";
-        byte[] contentArray = text.getBytes();
-        outputStream.write(contentArray);
-        outputStream.close();
-    }
-
-    @AfterEach
-    void delete(){
-        File path1 = new File("Test\\file1.txt");
-        path1.delete();
-
-        File path = new File("Test");
-        path.delete();
-    }
-
-    @DisplayName("Test for count matches of searched word")
+    @DisplayName("Test for count word")
     @Test
-    public void testCountMatchesOfSearchedWord() throws IOException {
-        File path1 = new File("Test\\file1.txt");
-        FileAnalyzer fileAnalyzer = new FileAnalyzer(path1, searchedWord);
-        FileStatistics fileStatistics = fileAnalyzer.analyze("Test\\file1.txt", searchedWord);
+    public void testCountWord() throws IOException {
+        List<String> sentence = List.of("apple", "dog", "car", "apple");
+        FileAnalyzer fileAnalyzer = new FileAnalyzer();
 
-        assertEquals(4, fileStatistics.getWordCount());
+        assertEquals(2, fileAnalyzer.countWord(sentence, "apple"));
     }
 
-    @DisplayName("Test for checking filtered sentences with matches of searched word")
+    @DisplayName("Test filterSentences")
     @Test
-    public void testCheckingFilteredSentencesWithMatchesOfSearchedWord() throws IOException {
-        File path1 = new File("Test\\file1.txt");
-        FileAnalyzer fileAnalyzer = new FileAnalyzer(path1, searchedWord);
-        FileStatistics fileStatistics = fileAnalyzer.analyze("Test\\file1.txt", searchedWord);
+    public void testFilterSentences() throws IOException {
+        List<String> sentence = List.of("1 apple", "dog", "car", "2 apple");
+        FileAnalyzer fileAnalyzer = new FileAnalyzer();
 
-        String content = fileAnalyzer.readContent("Test\\file1.txt");
-        List<String> sentences = fileAnalyzer.splitIntoSentences(content);
+        List<String> expected = List.of("1 apple", "2 apple");
 
-        StringBuilder expectedSentences = new StringBuilder();
-
-        for (int i = 0; i < sentences.size() - 1; i++) {
-            expectedSentences.append(sentences.get(i));
-            if (i != sentences.size() - 2) {
-                expectedSentences.append(", ");
-            }
-        }
-
-        assertEquals(fileStatistics.getSentences().toString(), "[" + expectedSentences + "]");
+        assertEquals(expected, fileAnalyzer.filterSentences(sentence, "apple"));
     }
 
-    @DisplayName("Test to check if readContent works correct")
+    @DisplayName("Test splitIntoSentences")
     @Test
-    public void testToCheckIfReadContentWorksCorrect() throws IOException {
-        File path1 = new File("Test\\file1.txt");
-        String text = "After the Second World War, jeans became popular all over the world. " +
-                "Today, blue jeans are made throughout the world – most of them in Asia. " +
-                "Very few jeans are now made in the USA, because of the cost: but it is still possible to buy blue jeans that are made in San Francisco. " +
-                "if you have a lot of money to spend.";
-        FileAnalyzer fileAnalyzer = new FileAnalyzer(path1, searchedWord);
+    public void testSplitIntoSentences() throws IOException {
+        String sentence = "Hi! Hello. How are you?";
+        FileAnalyzer fileAnalyzer = new FileAnalyzer();
 
-        assertEquals(fileAnalyzer.readContent("Test\\file1.txt"), text);
+        List<String> expected = List.of("Hi", "Hello", "How are you");
+
+        assertEquals(expected, fileAnalyzer.splitIntoSentences(sentence));
     }
-
 }
+

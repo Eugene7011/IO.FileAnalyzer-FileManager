@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FileManagerTest {
+public class FileManagerITest {
     String pathToCreatedDirWithFiles = "Test";
     String pathToCreatedEmptyDirForPaste = "TestTo";
     String pathToEmptyDir = "Empty";

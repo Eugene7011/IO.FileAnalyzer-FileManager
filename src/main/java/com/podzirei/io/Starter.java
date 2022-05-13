@@ -12,29 +12,29 @@ public class Starter {
         Scanner scanner = new Scanner(System.in);
         String path = scanner.nextLine();
 
-        if (path.length() == 0){
+        if (path.length() == 0) {
             System.out.println("Error. Missed path to file argument. Write --help to see right usage");
             return;
         }
 
-        if (path.equals("--help")){
+        if (path.equals("--help")) {
             System.out.println("Usage: java FileAnalyzer [path-to-file] [searchedWord-string");
             System.out.println("Example: java FileAnalyzer C:\\test.txt \"Searched string\"");
         }
 
         File file = new File(path);
 
-        if(!file.exists()){
+        if (!file.exists()) {
             System.out.println("Error! File doesn't exist. Write --help to see right usage");
             return;
         }
 
-        if (!file.isFile()){
+        if (!file.isFile()) {
             System.out.println("Error! Received path is not referred to file. Write --help to see right usage");
             return;
         }
 
-        if (!file.canRead()){
+        if (!file.canRead()) {
             System.out.println("Error! Forbidden to read this file. Write --help to see right usage");
             return;
         }
@@ -53,7 +53,7 @@ public class Starter {
     }
 
     private static void printCount(int wordCount) {
-        System.out.println("There are "  + wordCount + " matches of searched word in the text.");
+        System.out.println("There are " + wordCount + " matches of searched word in the text.");
     }
 
     private static void printSentencesWithWord(List<String> sentences) {

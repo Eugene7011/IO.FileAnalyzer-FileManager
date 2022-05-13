@@ -3,72 +3,75 @@ package com.podzirei.io;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FileAnalyzer {
 
-    private File file;
-    private String path;
-    private String searchedWord;
+    private static final Pattern SENTENCE_PATTERN = Pattern.compile("([.!?])");
 
-    public FileAnalyzer(File file, String searchedText) {
-        this.file = file;
-        this.searchedWord = searchedText;
-        this.path = file.getPath();
+    public FileAnalyzer() {
     }
 
-    public FileStatistics analyze(String path, String word) throws IOException {
+    public FileAnalyzer(File file, String searchedText) {
+
+    }
+
+    public FileStatistics analyze(String path, String word) {
         String content = readContent(path);
         List<String> sentences = splitIntoSentences(content);
-        List<String> filteredSentences = filter(sentences, word);
+        List<String> filteredSentences = filterSentences(sentences, word);
 
         int count = countWord(filteredSentences, word);
         return new FileStatistics(filteredSentences, count);
     }
 
-    private int countWord(List<String> filteredSentences, String word) {
+    int countWord(List<String> filteredSentences, String word) {
+        Pattern pattern = Pattern.compile("\\b" + word + "\\b");
+
         int count = 0;
         for (String sentence : filteredSentences) {
-            String[] wordsInSentence = sentence.split(" ");
-            for (String s : wordsInSentence) {
-                if (Objects.equals(s, word)) {
-                    count++;
-                }
+            Matcher matcher = pattern.matcher(sentence);
+            while (matcher.find()) {
+                count++;
             }
         }
         return count;
     }
 
-    public List<String> filter(List<String> sentences, String word) {
+    List<String> filterSentences(List<String> sentences, String word) {
         List<String> filteredSentences = new ArrayList<>();
 
         for (String sentence : sentences) {
-            String[] wordsInSentence = sentence.split(" ");
-            for (String s : wordsInSentence) {
-                if (Objects.equals(s, word)){
-                    filteredSentences.add(sentence);
-                    break;
-                }
+            if (sentence.contains(word)) {
+                filteredSentences.add(sentence);
             }
         }
         return filteredSentences;
     }
 
-    public List<String> splitIntoSentences(String content) {
-        return List.of(content.split("[\\.\\!\\?]"));
+    List<String> splitIntoSentences(String content) {
+        String[] sentences = SENTENCE_PATTERN.split(content);
+        List<String> trimmedSentences = new ArrayList<>();
+
+        for (String sentence : sentences) {
+            trimmedSentences.add(sentence.trim());
+        }
+
+        return trimmedSentences;
     }
 
-    public String readContent(String path) throws IOException {
+    String readContent(String path) {
         File file = new File(path);
-        InputStream inputStream = new FileInputStream(file);
         int fileLength = (int) file.length();
         byte[] contentArray = new byte[fileLength];
 
-        inputStream.read(contentArray);
-        inputStream.close();
+        try (InputStream inputStream = new FileInputStream(file)) {
+            inputStream.read(contentArray);
+        } catch (IOException e) {
+            throw new RuntimeException("Error", e);
+        }
 
         return new String(contentArray);
     }
-
-
 }

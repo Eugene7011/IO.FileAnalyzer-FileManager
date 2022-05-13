@@ -28,14 +28,14 @@ public class FileManager {
     public static int countDirs(String pathToFile) {
         int count = 0;
         File file = new File(pathToFile);
-        if (file.listFiles() != null) {
-            for (File innerFile : file.listFiles()) {
-                if (innerFile.isDirectory()) {
-                    count++;
-                    count += countDirs(innerFile.toString());
-                }
+
+        for (File innerFile : Objects.requireNonNull(file.listFiles())) {
+            if (innerFile.isDirectory()) {
+                count++;
+                count += countDirs(innerFile.toString());
             }
         }
+
         return count;
     }
 
@@ -60,11 +60,11 @@ public class FileManager {
 
     private static void copyFile(File sourceFile, File destinationFile) throws IOException {
         try (FileInputStream input = new FileInputStream(sourceFile);
-        FileOutputStream output = new FileOutputStream(destinationFile);) {
+             FileOutputStream output = new FileOutputStream(destinationFile)) {
 
             int fileLength = (int) sourceFile.length();
             byte[] buffer = new byte[fileLength];
-
+            input.read(buffer);
             output.write(buffer);
         }
     }
@@ -91,14 +91,6 @@ public class FileManager {
     }
 
     private static void cutFile(File sourceFile, File destinationFile) {
-        boolean renameResult = sourceFile.renameTo(destinationFile);
-
-        System.out.println("Use java io to move from " + sourceFile.toPath() + " to " + destinationFile.toPath());
-
-        if (renameResult) {
-            System.out.println(" success. ");
-        } else {
-            System.out.println(" fail. ");
-        }
+        sourceFile.renameTo(destinationFile);
     }
 }
