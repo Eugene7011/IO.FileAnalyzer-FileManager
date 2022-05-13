@@ -66,9 +66,9 @@ public class FileAnalyzer {
         int fileLength = (int) file.length();
         byte[] contentArray = new byte[fileLength];
 
-        try (InputStream inputStream = new FileInputStream(file)) {
-            inputStream.read(contentArray);
-        } catch (IOException e) {
+        try(BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file))) {
+            bufferedInputStream.read(contentArray);
+        }catch (IOException e) {
             throw new RuntimeException("Error", e);
         }
 
