@@ -4,12 +4,11 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class FileAnalyzer {
+public class FileAnalyzer implements FileAnalyzerI {
 
     private static final Pattern SENTENCE_PATTERN = Pattern.compile("([.!?])");
 
@@ -52,9 +51,9 @@ public class FileAnalyzer {
         int fileLength = (int) file.length();
         byte[] contentArray = new byte[fileLength];
 
-        try(BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file))) {
+        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file))) {
             bufferedInputStream.read(contentArray);
-        }catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("IO Exception", e);
         }
 

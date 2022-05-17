@@ -3,7 +3,6 @@ package com.podzirei.io;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,7 +11,7 @@ public class FileAnalyzerTest {
 
     @DisplayName("Test for count word")
     @Test
-    public void testCountWord() throws IOException {
+    public void testCountWord() {
         List<String> sentence = List.of("apple", "dog", "car", "apple");
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
 
@@ -21,7 +20,7 @@ public class FileAnalyzerTest {
 
     @DisplayName("Test filterSentences")
     @Test
-    public void testFilterSentences() throws IOException {
+    public void testFilterSentences() {
         List<String> sentence = List.of("1 apple", "dog", "car", "2 apple");
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
 
@@ -32,7 +31,7 @@ public class FileAnalyzerTest {
 
     @DisplayName("Test splitIntoSentences")
     @Test
-    public void testSplitIntoSentences() throws IOException {
+    public void testSplitIntoSentences() {
         String sentence = "Hi! Hello. How are you?";
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
 
