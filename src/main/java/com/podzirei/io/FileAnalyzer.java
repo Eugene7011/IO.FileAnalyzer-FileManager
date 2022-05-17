@@ -2,9 +2,12 @@ package com.podzirei.io;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FileAnalyzer {
 
@@ -27,38 +30,21 @@ public class FileAnalyzer {
     }
 
     int countWord(List<String> filteredSentences, String word) {
-        Pattern pattern = Pattern.compile("\\b" + word + "\\b");
-
-        int count = 0;
-        for (String sentence : filteredSentences) {
-            Matcher matcher = pattern.matcher(sentence);
-            while (matcher.find()) {
-                count++;
-            }
-        }
-        return count;
+        return (int) Stream.of(filteredSentences.toString().split(" "))
+                .filter(elem -> elem.contains(word))
+                .count();
     }
 
     List<String> filterSentences(List<String> sentences, String word) {
-        List<String> filteredSentences = new ArrayList<>();
-
-        for (String sentence : sentences) {
-            if (sentence.contains(word)) {
-                filteredSentences.add(sentence);
-            }
-        }
-        return filteredSentences;
+        return sentences.stream()
+                .filter(s -> s.contains(word))
+                .collect(Collectors.toList());
     }
 
     List<String> splitIntoSentences(String content) {
-        String[] sentences = SENTENCE_PATTERN.split(content);
-        List<String> trimmedSentences = new ArrayList<>();
+        List<String> strings = Arrays.asList(SENTENCE_PATTERN.split(content));
 
-        for (String sentence : sentences) {
-            trimmedSentences.add(sentence.trim());
-        }
-
-        return trimmedSentences;
+        return new ArrayList<>(strings);
     }
 
     String readContent(String path) {
@@ -69,7 +55,7 @@ public class FileAnalyzer {
         try(BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file))) {
             bufferedInputStream.read(contentArray);
         }catch (IOException e) {
-            throw new RuntimeException("Error", e);
+            throw new RuntimeException("IO Exception", e);
         }
 
         return new String(contentArray);

@@ -36,7 +36,7 @@ public class FileAnalyzerTest {
         String sentence = "Hi! Hello. How are you?";
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
 
-        List<String> expected = List.of("Hi", "Hello", "How are you");
+        List<String> expected = List.of("Hi", " Hello", " How are you");
 
         assertEquals(expected, fileAnalyzer.splitIntoSentences(sentence));
     }
